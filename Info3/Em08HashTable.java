@@ -2,6 +2,8 @@ import java.util.ArrayList;
 
 public class Em08HashTable<K,V> {
 
+	// konstruiert eine Hashtable der größe der nächst größeren Primzahl von inputsize was der anzahl der einzufügenden Elemente sein sollte.
+	// Es wird keine Rehash methode implementiert und somit gibt es keine möglichkeit die listen größe zu ändern
 	public Em08HashTable(int input_size){
 		this.size = nextPrime(input_size);
 		System.out.println(nextPrime(input_size));
@@ -10,6 +12,7 @@ public class Em08HashTable<K,V> {
 
 	}
 
+	// Sucht nach einem Key in der Liste und gibt alle mit dem key versehenen elemente in einer arraylist zurück
 	public ArrayList<V> search(K searchkey){ // equivalent to contains;
 		if (searchkey == null) 
 			throw new NullPointerException();
@@ -23,8 +26,8 @@ public class Em08HashTable<K,V> {
 		return res;
 	}
 
+	// Sucht nen freien Platz in der liste und inserted das element dort
 	public boolean insert(K key, V value){ // equivalent implementation to put();
-		// todo: search for place
 		if(key == null || value == null || free < 1) 
 			return false;
 		Entry en = new Entry(key,value);
