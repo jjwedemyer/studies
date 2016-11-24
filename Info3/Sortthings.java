@@ -7,7 +7,7 @@ public class Sortthings{
 	public static void main(String[] args) {
 		//Liste mit 1-20000 erzeugen
 		List<Integer> list = new ArrayList<Integer>();
-		for (int i = 1; i < 20000; i++) {
+		for (int i = 1; i < 200; i++) {
 		    list.add(i);
 		}
 		Collections.shuffle(list);
@@ -54,7 +54,11 @@ class Sorter{
 		Pair<Integer,Integer> p = null;
 		if (low < high) {
 			p = partition(array,partitionScheme,low,high);
-			lowcount = quickSort(array,partitionScheme, low, p.first-1);
+			System.out.println(p);
+			try{
+			lowcount = quickSort(array, partitionScheme, low, p.first-1);} catch (Exception e){
+				e.printStackTrace();
+			}
 			highcount = quickSort(array,partitionScheme, p.first+1, high);
 		}
 		return (lowcount+highcount+p.second);
@@ -74,7 +78,7 @@ class Sorter{
 			if (i >= j) break;
 			t = array[i]; array[i] = array[j]; array[j] = t;
 		}
-		t = array[low]; array[low] = array [j];
+		t = array[low]; array[low] = array[j]; array[j] = t;
 		return new Pair<Integer,Integer>(j,count);
 
 	}
@@ -99,5 +103,8 @@ class Pair<F, S> {
     public Pair(F f,S s){
     	this.first = f;
     	this.second = s;
+    }
+    public String toString(){
+    	return "First: "+first+" Second: "+second;
     }
 }
