@@ -17,7 +17,19 @@ public class Sortthings{
 */
 class Sorter{
 	public static int insertionSort(<E extends Comparable>[] array){
-
+		int n = array.length;
+		int counter = 0;
+		for(j=2; j<=n; j++){
+			E key = array[j];
+			int i = j;
+			while(i>1 && array[i-1] > key) {
+				counter++;
+				array[i] = array[i-1];
+				i--;
+			}
+			array[i] = key;
+		}
+		return counter;
 	}
 
 	public static int quickSort(<E extends Comparable>[] array, int partitionScheme, int low, int high){
@@ -55,7 +67,7 @@ class Sorter{
 	//random helper functions
 	public static int randomWithRange(int min, int max)
 	{
-	   int range = Math.abs(max - min) + 1;     
+	   int range = Math.abs(max - min) + 1;
 	   return (int)(Math.random() * range) + (min <= max ? min : max);
 	}
 
