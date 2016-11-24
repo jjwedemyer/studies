@@ -1,21 +1,26 @@
 import java.Math;
-
-interface Partion {
-	public abstract int partionInt();
-}
-
+/**
+* Test class
+*/
 public class Sortthings{
 	public static void main(String[] args) {
+		E[] a;
+		Sorter.quickSort(a,a.length/2,0,a.length-1);
+		Sorter.quickSort(a,Sorter.randomWithRange(0,a.length-1),0,a.length-1);
+		//TODO: Testing
 		System.out.println("shit happendssdsdsd");
 	}
 }
 
+/**
+* This class implements the sorting algorithms
+*/
 class Sorter{
 	public static int insertionSort(<E extends Comparable>[] array){
 
 	}
 
-	public static int quickSort(<E extends Comparable>[] array, <I extends Partion> partitionScheme, int low, int high){
+	public static int quickSort(<E extends Comparable>[] array, int partitionScheme, int low, int high){
 		int lowcount,highcount;
 		Pair<Integer,Integer> p = null;
 		if (low < high) {
@@ -26,11 +31,13 @@ class Sorter{
 		return (lowcount+highcount+p.second);
 	}
 
-	protected static Pair<Integer,Integer> partition(E[] array, <I extends Partion> partitionScheme ,int low, int high){
+	protected static Pair<Integer,Integer> partition(E[] array, int partitionScheme ,int low, int high){
 		//TODO: implement counting behavior
 		int count,i,j;
-		i = partitionScheme.partionInt()
-		E t,pivot = array[i];
+		i = low-1;
+		j = high+1;
+		count = j;
+		E t,pivot = array[partitionScheme];
 
 		while(true){
 			do{ ++i; }while(array[i].compareTo(pivot) <= 0 && i <= high);
@@ -53,6 +60,9 @@ class Sorter{
 	}
 
 }
+/**
+* Helping class
+*/
 class Pair<F, S> {
     public F first;
     public S second;
