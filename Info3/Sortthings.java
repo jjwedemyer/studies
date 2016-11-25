@@ -114,14 +114,14 @@ class Sorter{
 		E t,pivot = array[partitionScheme];
 
 		while(true){
-			do ++i;
-				while(i < high && array[i].compareTo(pivot) < 0 );
-			do --j;
-				while(j > 0 && array[j].compareTo(pivot) > 0 );
+				while(array[++i].compareTo(pivot) < 0 )
+					if(i == high) break;
+				while(array[--j].compareTo(pivot) > 0 )
+					if(j == low) break;
 			if (i >= j) break;
-			t = array[i]; array[i] = array[j]; array[j] = t;
+			exch(array,i,j);
 		}
-		t = array[i]; array[i] = array[j]; array[j] = t;
+		exch(array,low,j);
 		count -= j; count += (i-low);
 		return new Pair<Integer,Integer>(j,count);
 
@@ -143,6 +143,12 @@ class Sorter{
 	 	//count -= j; count += (i-low);
 	 	return new Pair<Integer,Integer>(i,j);
 	 }*/
+
+	 private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
 
 
 
