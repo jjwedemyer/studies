@@ -13,7 +13,7 @@ public class Sortthings {
 	public static void main(String[] args) {
 		int i = 0;
 		String res;
-		try{while (i < 1) {
+		while (i < 1) {
 					long start = System.nanoTime();
 					res = doshit(i);
 					System.out.println(res);
@@ -21,11 +21,7 @@ public class Sortthings {
 //					TimeUnit.SECONDS.sleep(1);
 					System.out.println("time needed"+ new Date(start-System.nanoTime()));
 
-				}}
-		catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println(i);
-		}
+				}
 	}
 
 	public static String doshit(int runs){
@@ -43,10 +39,10 @@ public class Sortthings {
 		System.arraycopy(a, 0, b, 0, list.size());
 
 		System.out.println("unsorted: 		\t"+Arrays.toString(a));
-		int r = Sorter.quickSort(a,(int)(a.length/2),0,a.length-1);
+		int r = Sorter.quickSort(a,0,a.length-1,false);
 		System.out.println("quicksort_half: \t"+Arrays.toString(a));
 		System.arraycopy(b, 0, a, 0, list.size());
-		int r2 = Sorter.quickSort(a,Sorter.randomWithRange(0,a.length-1),0,a.length-1);
+		int r2 = Sorter.quickSort(a,0,a.length-1,true);
 		System.out.println("quicksort_rand: \t"+Arrays.toString(a));
 		System.arraycopy(b, 0, a, 0, list.size());
 		int r3 = Sorter.insertionSort(a);
@@ -71,8 +67,8 @@ class Sorter{
 			E key = array[j];
 			int i = j;
 			while(i>1 && array[i-1].compareTo(key) > 0) {
-				array[i] = array[i-1];
 				i--;
+				array[i] = array[i-1];
 			}
 			counter += (j-i);
 			counter += (i==1)? 0 : 1;
@@ -81,37 +77,145 @@ class Sorter{
 		return counter;
 	}
 
-	public static <E extends Comparable<E>> int quickSort(E[] array, int partitionScheme, int low, int high){
+	public static <E extends Comparable<E>> int quickSort(E[] array, int low, int high,boolean random){
+		if (high-low <= 1) return 0;
 		int lowcount=0,highcount=0;
-		Pair<Integer,Integer> p = null;
-		if (low < high) {
-			p = partition(array,partitionScheme,low,high);
-			//System.out.println(p);
-			//System.out.println(Arrays.toString(array));
-			int b = quickSort(
-								array, 
-								partitionScheme, 
-								low, 
-								p.first-1);
-			lowcount = b;
-			int a = quickSort(
-								array,
-								partitionScheme, 
-								p.first+1, 
-								high);
-			highcount = a;
-		}
-		if (p == null) return 0;
-		else return (int)(lowcount+highcount+p.second.intValue());
+		Pair<Integer> p = null;
+		p = partition(array,low,high,random);
+		//System.out.println(p);
+		//System.out.println(Arrays.toString(array));
+		lowcount = quickSort(	array,  
+								p.left1, 
+								p.right1,
+								random);
+		highcount = quickSort(	array,
+								p.left2, 
+								p.right2,
+								random);
+		return (int)(lowcount+highcount+p.count.intValue());
 	}
 
-	protected static <E extends Comparable<E>> Pair<Integer,Integer> partition(E[] array, int partitionScheme, int low, int high){
+	/**
+	*	nach script
+	*/
+	protected static <E extends Comparable<E>> Pair<Integer> partition(E[] array, int left, int right,boolean random){
+		int count = 0, pivotindex = random ? randomWithRange(left,right) :((left+right)/2);  // erstellen des pivot indexes
+		E pivot = array[pivotindex]; // pivot element
+
+		int lBorder = left, rBorder = right-1;
+		while(rBorder - lBorder > 0){
+			int i, lptr, rptr;
+			
+			for (i = lBorder; i < pivotindex ; i++ ) {
+				if (array[i].compareTo(pivot) > 0)
+					break;
+			}
+			lptr = i;
+			count += i - lBorder + 1;
+			if (i == pivotindex)
+				count--;
+
+			for (i = rBorder; i > pivotindex ; i--) {
+				if(array[i].compareTo(pivot) < 0)
+					break;
+			}
+			rptr = i;
+			count += rBorder - i +1;
+			if (i == pivotindex)
+				count--;
+
+
+			exch(array,rptr,lptr);
+
+			if (pivotindex == lptr)
+				pivotindex = rptr;
+			else if(pivotindex == rptr)
+				pivotindex = lptr;
+
+
+			//update borders for searchinterval
+			if (lptr < pivotindex) {
+				if (pivotindex < rptr) {	//lptr < pindex < rptr
+					lBorder = lptr + 1;
+					rBorder = rptr - 1;
+				}
+				if (pivotindex == rptr) {	//lptr < pindex = rptr
+					lBorder = lptr + 1;
+					rBorder = rptr;
+				}
+			}
+			if (lptr == pivotindex) {
+				if (pivotindex < rptr) {	//lptr = pindex < rptr
+					lBorder = lptr;
+					rBorder = rptr - 1;
+				}
+				if (pivotindex == rptr) {	//lptr = pindex = rptr
+					lBorder = lptr;
+					rBorder = rptr;
+				}
+			}
+		}
+
+		int left1, left2, right1, right2;
+		if (pivotindex - left < right - pivotindex) {
+			left1 = left;
+			right1 = pivotindex;
+			left2 = pivotindex + 1;
+			right2 = right; 
+		} 		
+		else {
+			left1 = pivotindex + 1;
+			right1 = right;
+			left2 = left;
+			right2 = pivotindex;
+		}
+
+		return new Pair<Integer>(left1,left2,right1,right2,count);
+	}
+
+
+
+
+
+	/**
+	* implementierung nach Sedgewick
+	
+
+	protected static <E extends Comparable<E>> Pair<Integer,Integer> partition(E[] array,int low, int high, boolean random){
 		//TODO: implement counting behavior
 		int count,i,j;
-		i = low -1;
+		i = low;
 		j = high +1;
 		count = j;
-		E t,pivot = array[partitionScheme];
+		E pivot = array[((low+high)/2)];
+
+		while(true){
+				while(array[++i].compareTo(pivot) < 0 )
+					if(i == high) break;
+				while(pivot.compareTo(array[--j]) < 0 )
+					if(j == low) break;
+			if (i >= j) break;
+			exch(array,i,j);
+			System.out.println(Arrays.toString(array));
+		}
+		exch(array,((low+high)/2),j);
+		//System.out.println(Arrays.toString(array));
+		count -= j; count += (i-low);
+		return new Pair<Integer,Integer>(j,count);
+
+	}
+
+
+	/**
+	* implementierung nach Sedgewick
+	
+	protected static <E extends Comparable<E>> Pair<Integer,Integer,Integer,Integer,Integer> partition(E[] array, int low, int high){
+		//TODO: implement counting behavior
+		int count,i,j;
+		i = low;
+		j = high +1;
+		count = j;
+		E t,pivot = array[Sorter.randomWithRange(low,high)];
 
 		while(true){
 				while(array[++i].compareTo(pivot) < 0 )
@@ -144,6 +248,10 @@ class Sorter{
 	 	return new Pair<Integer,Integer>(i,j);
 	 }*/
 
+
+	 /**
+	 * swapping helper nach Sedgewick
+	 */
 	 private static void exch(Object[] a, int i, int j) {
         Object swap = a[i];
         a[i] = a[j];
@@ -163,15 +271,15 @@ class Sorter{
 /**
 * Helping class
 */
-class Pair<F, S> {
-    public F first;
-    public S second;
+class Pair<T> {
+    public T left1;
+    public T left2;
+    public T right1;
+    public T right2;
+    public T count;
 
-    public Pair(F f,S s){
-    	this.first = f;
-    	this.second = s;
-    }
-    public String toString(){
-    	return "First: "+first+" Second: "+second;
+
+    public Pair(T f,T s, T t, T fr , T fth){
+    	this.left1 = f; this.left2 = s; this.right1 = t; this.right2 = fr; this.count = fth;
     }
 }
