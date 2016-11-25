@@ -114,10 +114,10 @@ class Sorter{
 		E t,pivot = array[partitionScheme];
 
 		while(true){
-			while(i < high && array[i].compareTo(pivot) < 0 )
-				++i;
-			while(j > 0 && array[j].compareTo(pivot) > 0 )
-				--j;
+			do ++i;
+				while(i < high && array[i].compareTo(pivot) < 0 );
+			do --j;
+				while(j > 0 && array[j].compareTo(pivot) > 0 );
 			if (i >= j) break;
 			t = array[i]; array[i] = array[j]; array[j] = t;
 		}
