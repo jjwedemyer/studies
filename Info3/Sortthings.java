@@ -38,11 +38,11 @@ public class Sortthings {
 		Integer[] b = new Integer[list.size()];
 		System.arraycopy(a, 0, b, 0, list.size());
 
-		System.out.println("unsorted: 		\t"+Arrays.toString(a));
-		int r = Sorter.quickSort(a,0,a.length-1,false);
+		System.out.println("unsorted:       \t"+Arrays.toString(a));
+		int r = Sorter.quickSort(a,0,a.length,false);
 		System.out.println("quicksort_half: \t"+Arrays.toString(a));
 		System.arraycopy(b, 0, a, 0, list.size());
-		int r2 = Sorter.quickSort(a,0,a.length-1,true);
+		int r2 = Sorter.quickSort(a,0,a.length,true);
 		System.out.println("quicksort_rand: \t"+Arrays.toString(a));
 		System.arraycopy(b, 0, a, 0, list.size());
 		int r3 = Sorter.insertionSort(a);
@@ -50,6 +50,10 @@ public class Sortthings {
 		res += "Vergleiche quickSort1: 		|\t" + r  +"\n";
 		res += "Vergleiche quickSort2: 		|\t" + r2 +"\n";
 		res += "Vergleiche insertionSort: 	|\t" + r3 +"\n";
+		int r4 = Sorter.heapsort(a);
+		System.out.println("heapsort:      \t"+Arrays.toString(a));
+		System.arraycopy(b, 0, a, 0, list.size());
+		res += "Vergleiche heaposrt :		|\t" + r  +"\n";
 		a = null;
 		b = null;
 		return res;
@@ -60,15 +64,55 @@ public class Sortthings {
 * This class implements the sorting algorithms
 */
 class Sorter{
+	public static <E extends Comparable<E>> int heapsort(E[] array){
+		int heapsize,count = 0;
+		if (array.length -1 < 2) return 0;
+		for (int i = (array.length/2)-1; i >= 0; i--) {
+			count += reheap(array,i,array.length);
+		}
+		heapsize = array.length;
+		while (heapsize >= 2) {
+			exch(array,0,heapsize-1);
+			heapsize--;
+			count += reheap(array,0,heapsize);
+		}
+		return count;
+	}
+	public static <E extends Comparable<E>> int reheap(E[] array,int k, int l){
+		int maxson,count=0;
+		if((2*k +1) >= l) 
+			return 0;
+
+		if ((2*k +1) >= l-1)
+			maxson = 2*k+1;
+		else {
+			count++;
+			if (array[2*k+1].compareTo(array[2*k+2]) > 0)
+				maxson = 2*k+1;
+			else maxson = 2*k +2;
+		}
+		count++;
+		if (array[k].compareTo(array[maxson]) >= 0)
+			return count;
+
+		exch(array,k,maxson);
+		return count + reheap(array,maxson,l);
+	}
+
+
+
+
+
+
 	public static <E extends Comparable<E>> int insertionSort(E[] array){
 		int n = array.length;
 		int counter = 0;
-		for(int j=2; j<n; j++){
+		for(int j=1; j<n; j++){
 			E key = array[j];
 			int i = j;
-			while(i>1 && array[i-1].compareTo(key) > 0) {
-				i--;
+			while(i>0 && array[i-1].compareTo(key) > 0) {
 				array[i] = array[i-1];
+				i--;
 			}
 			counter += (j-i);
 			counter += (i==1)? 0 : 1;
@@ -125,6 +169,7 @@ class Sorter{
 				count--;
 
 
+			//System.out.println("exch: rptr:"+rptr+" arrayelem[rptr] "+array[rptr]+" lptr:"+lptr+" arrayelem[lptr] "+array[lptr]);
 			exch(array,rptr,lptr);
 
 			if (pivotindex == lptr)
@@ -263,8 +308,8 @@ class Sorter{
 	//random helper functions
 	public static int randomWithRange(int min, int max)
 	{
-	   int range = Math.abs(max - min) + 1;
-	   return (int)(Math.random() * range) + (min <= max ? min : max);
+		return (int)(max-(Math.random()*((max-min)+1)));
+
 	}
 
 }
