@@ -10,6 +10,36 @@ public class Sortthings {
 		run = runs;
 
 	}
+
+/**
+* Gefordertes Testing.
+*/
+	public static void Keytester(){
+		int size = 10, countINsim, countInEx, countQusim, countQuEx, countHeapSim, countHeapEx;
+		SimpleKey[] simples, simIns, simQuick, simHeap;
+		ExtendedKey[] ext, extIns, extQuick, extHeap;
+
+
+		simples = new SimpleKey[size];
+		ext   = new ExtendedKey[size];
+		for(int i = 0; i < size; i++){
+			double rand = Math.random();
+			simples[i] = new SimpleKey(rand > 0.5 ? 1 : 0,i);
+			ext[i]	   = new ExtendedKey(rand > 0.5 ? 1:0,i);
+		}
+		simIns = new SimpleKey[size];
+		simQuick = new SimpleKey[size];
+		simHeap = new SimpleKey[size];
+		extIns = new ExtendedKey[size];
+		extQuick = new ExtendedKey[size];
+		extHeap = new ExtendedKey[size];
+
+		System.array
+
+		// sort methods
+		r = Sorter.insertionSort(sim		
+	}
+
 	public static void main(String[] args) {
 		int i = 0;
 		String res;
