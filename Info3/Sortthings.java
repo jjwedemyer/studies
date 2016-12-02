@@ -14,44 +14,69 @@ public class Sortthings {
 /**
 * Gefordertes Testing.
 */
-	public static void Keytester(){
+	public static String Keytester(long runs){
+		String res = "Durchlauf: "+ runs;
 		int size = 10, countINsim, countInEx, countQusim, countQuEx, countHeapSim, countHeapEx;
-		SimpleKey[] simples, simIns, simQuick, simHeap;
-		ExtendedKey[] ext, extIns, extQuick, extHeap;
+		SimpleKey[] simples;
+		ExtendedKey[] ext;
 
 
 		simples = new SimpleKey[size];
 		ext   = new ExtendedKey[size];
 		for(int i = 0; i < size; i++){
 			double rand = Math.random();
-			simples[i] = new SimpleKey(rand > 0.5 ? 1 : 0,i);
-			ext[i]	   = new ExtendedKey(rand > 0.5 ? 1:0,i);
+			simples[i] = new SimpleKey(i%2,i);
+			ext[i]	   = new ExtendedKey(i%2,i);
 		}
-		simIns = new SimpleKey[size];
-		simQuick = new SimpleKey[size];
-		simHeap = new SimpleKey[size];
-		extIns = new ExtendedKey[size];
-		extQuick = new ExtendedKey[size];
-		extHeap = new ExtendedKey[size];
-
-		System.array
-
+		SimpleKey[][] simTest = new SimpleKey[3][];
+		ExtendedKey[][] extTest = new ExtendedKey[3][];	
+		for(int i =0;i<3;i++){
+			simTest[i] = new SimpleKey[size];
+			System.arraycopy(simples,0,simTest[i],0,size);
+		}
+		for(int i = 0;i<3;i++) {
+			extTest[i] = new ExtendedKey[size];
+			System.arraycopy(ext,0,extTest[i],0,size);
+		}
+		//System.out.println(Arrays.deepToString(simTest));
 		// sort methods
-		r = Sorter.insertionSort(sim		
+		//simplekeys
+		countINsim 	 = Sorter.insertionSort(simTest[0]);
+		countQusim 	 = Sorter.quickSort(simTest[1],0,simTest[1].length,false);
+		countHeapSim = Sorter.heapsort(simTest[2]);
+
+		//extendedKeys
+		countInEx 	 = Sorter.insertionSort(extTest[0]);
+		countQuEx	 = Sorter.quickSort(extTest[1],0,extTest[1].length,false);
+		countHeapEx	 = Sorter.heapsort(extTest[2]);
+
+		res += "\ninsertionSort auf SimpleKey:\t"+ countINsim;
+		res += "\nQuickSort auf SimpleKey:\t"+ countQusim;
+		res += "\nHeapSort auf SimpleKey:\t\t"+ countHeapSim;
+
+		res += "\n\ninsertionSort auf ExtendedKey:\t"+ countInEx;
+		res += "\nQuickSort auf ExtendedKey:\t"+ countQuEx;
+		res += "\nHeapSort auf ExtendedKey:\t"+ countHeapEx;
+
+		return res;
 	}
 
 	public static void main(String[] args) {
-		int i = 0;
+		long i = 0,avg=0,loop=Long.parseLong(args[0]);
 		String res;
-		while (i < 1) {
+		while (i < loop) {
 					long start = System.nanoTime();
-					res = doshit(i);
+					res = Keytester(i);
+					long diff = ((System.nanoTime()-start)/1000);
 					System.out.println(res);
 					i++;
 //					TimeUnit.SECONDS.sleep(1);
-					System.out.println("time needed"+ new Date(start-System.nanoTime()));
+					avg += diff;
+					System.out.println("time needed:\t\t"+diff);
+					System.out.println("\n\n");
 
 				}
+				System.out.println("AVG: \t\t"+(avg/loop));
 	}
 
 	public static String doshit(int runs){
