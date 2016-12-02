@@ -5,12 +5,6 @@ import java.util.concurrent.TimeUnit;
 * Test class
 */
 public class Sortthings {
-	int run;
-	public Sortthings(int runs){
-		run = runs;
-
-	}
-
 /**
 * Gefordertes Testing.
 */
@@ -23,12 +17,12 @@ public class Sortthings {
 
 		simples = new SimpleKey[size];
 		ext   = new ExtendedKey[size];
-		for(int i = 0; i < size; i++){
+		for(int i = 0; i < size; i++){ // Initializierungs loop für die Keys
 			double rand = Math.random();
 			simples[i] = new SimpleKey(i%2,i);
 			ext[i]	   = new ExtendedKey(i%2,i);
 		}
-		SimpleKey[][] simTest = new SimpleKey[3][];
+		SimpleKey[][] simTest = new SimpleKey[3][]; //array kopien erstellen für die verschiedenen Algorithmen
 		ExtendedKey[][] extTest = new ExtendedKey[3][];	
 		for(int i =0;i<3;i++){
 			simTest[i] = new SimpleKey[size];
@@ -66,7 +60,7 @@ public class Sortthings {
 		String res;
 		while (i < loop) {
 					long start = System.nanoTime();
-					res = Keytester(i);
+					res = Keytester(i); // Lässt loop oft die Testmethode laufen
 					long diff = ((System.nanoTime()-start)/1000);
 					System.out.println(res);
 					i++;
@@ -76,9 +70,12 @@ public class Sortthings {
 					System.out.println("\n\n");
 
 				}
-				System.out.println("AVG: \t\t"+(avg/loop));
+				System.out.println("AVG: \t\t"+(avg/loop)); // AVG time in Milliseconds
 	}
 
+	/**
+	* Irellevant
+	*/
 	public static String doshit(int runs){
 		String res = "Durchlauf: "+ runs +"\n";
 		//Liste mit 1-20000 erzeugen
@@ -119,6 +116,10 @@ public class Sortthings {
 * This class implements the sorting algorithms
 */
 class Sorter{
+
+	/**
+	*	Heapsort nach Skriptum
+	*/
 	public static <E extends Comparable<E>> int heapsort(E[] array){
 		int heapsize,count = 0;
 		if (array.length -1 < 2) return 0;
@@ -133,6 +134,10 @@ class Sorter{
 		}
 		return count;
 	}
+
+	/**
+	* reheap nach Skriptum
+	*/
 	public static <E extends Comparable<E>> int reheap(E[] array,int k, int l){
 		int maxson,count=0;
 		if((2*k +1) >= l) 
@@ -157,7 +162,9 @@ class Sorter{
 
 
 
-
+	/**
+	* InsertionSort nach Zettelvorlage
+	*/
 
 	public static <E extends Comparable<E>> int insertionSort(E[] array){
 		int n = array.length;
@@ -274,79 +281,6 @@ class Sorter{
 	}
 
 
-
-
-
-	/**
-	* implementierung nach Sedgewick
-	
-
-	protected static <E extends Comparable<E>> Pair<Integer,Integer> partition(E[] array,int low, int high, boolean random){
-		//TODO: implement counting behavior
-		int count,i,j;
-		i = low;
-		j = high +1;
-		count = j;
-		E pivot = array[((low+high)/2)];
-
-		while(true){
-				while(array[++i].compareTo(pivot) < 0 )
-					if(i == high) break;
-				while(pivot.compareTo(array[--j]) < 0 )
-					if(j == low) break;
-			if (i >= j) break;
-			exch(array,i,j);
-			System.out.println(Arrays.toString(array));
-		}
-		exch(array,((low+high)/2),j);
-		//System.out.println(Arrays.toString(array));
-		count -= j; count += (i-low);
-		return new Pair<Integer,Integer>(j,count);
-
-	}
-
-
-	/**
-	* implementierung nach Sedgewick
-	
-	protected static <E extends Comparable<E>> Pair<Integer,Integer,Integer,Integer,Integer> partition(E[] array, int low, int high){
-		//TODO: implement counting behavior
-		int count,i,j;
-		i = low;
-		j = high +1;
-		count = j;
-		E t,pivot = array[Sorter.randomWithRange(low,high)];
-
-		while(true){
-				while(array[++i].compareTo(pivot) < 0 )
-					if(i == high) break;
-				while(array[--j].compareTo(pivot) > 0 )
-					if(j == low) break;
-			if (i >= j) break;
-			exch(array,i,j);
-		}
-		exch(array,low,j);
-		count -= j; count += (i-low);
-		return new Pair<Integer,Integer>(j,count);
-
-	}
-
-	 /*protected static <E extends Comparable<E>> Pair<Integer,Integer> partition(E[] array, int partitionScheme, int low, int high){
-	 	//TODO: implement counting behavior
-	 	int count,i,j;
-	 	i = low;
-	 	//count = j;
-	 	E t,pivot = array[partitionScheme];
-	 	for (j = low; j < high ; j++) {
-			if (array[j].compareTo(pivot) <= 0) {
-				t = array[i]; array[i] = array[j]; array[j] = t;
-				i++;
-			}
-			t = array[i]; array[i] = array[high]; array[high] = t;
-	 	}
-	 	//count -= j; count += (i-low);
-	 	return new Pair<Integer,Integer>(i,j);
-	 }*/
 
 
 	 /**
